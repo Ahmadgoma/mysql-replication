@@ -1,19 +1,19 @@
-##MySQL replication
+## MySQL replication
 - Process that allows you to easily maintain multiple copies of a MySQL data by having them copied automatically from a master to a slave database.
 
-##Why use replication
+## Why use replication
 - Can helpful for many reasons including facilitating a backup for the data 
 - The way to analyze DB without using the main database
 - The way to scale out.
 
-##Implementation
+## Implementation
 
-###Notes before setup: 
+### Notes before setup: 
 - Make sure that mysql version is the same version in master DB and slaves.
 - Make ssh for master DB in the slaves to download dump for DB.
 - First, Make configuration in the slaves.
 
-####Step One — Configure the Master Database
+#### Step One — Configure the Master Database
 
 `sudo nano /etc/mysql/mysql.conf.d/mysqld.cnf`
 
@@ -67,7 +67,7 @@ USE database;
 `mysqldump -u root -p database > database.sql`
 
 
-###Step Two — Configure the Slave Database
+#### Step Two — Configure the Slave Database
 
 - Set up mysql version as in the master.
 - Create DB.
@@ -83,7 +83,9 @@ USE database;
 `server-id = 2`
 
 `relay-log               = /var/log/mysql/mysql-relay-bin.log`
+
 `log_bin                 = /var/log/mysql/mysql-bin.log`
+
 `binlog_do_db            = database`
 
 `sudo service mysql restart`
@@ -125,8 +127,7 @@ This tells the slave to skip one query (which is the invalid one that caused the
 
 `UNLOCK TABLES;'
 
-- If you want to skip errors in replication with code you know:
-
+- If you want to skip errors in replication with code you know,
 you need to add this line in `/etc/mysql/mysql.conf.d/mysqld.cnf`
 
 `slave-skip-errors = 1049`
@@ -134,6 +135,7 @@ you need to add this line in `/etc/mysql/mysql.conf.d/mysqld.cnf`
 - 1049 the error code from phpmyadmin, you can add more codes or all
   
 `slave-skip-errors = 1049, 1062`
+
 `slave-skip-errors = all`
 
 and reload mysql
